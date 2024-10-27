@@ -16,16 +16,16 @@ public class HologramManager : MonoBehaviour
         }
 
         // Create 4 clones of the hologramObject at different angles
-        hologramClones[0] = Instantiate(hologramObject, new Vector3(0, 0, 4), Quaternion.Euler(0, 0, 0));
+        hologramClones[0] = Instantiate(hologramObject, new Vector3(0, 0, 6), Quaternion.Euler(0, 0, 0));
         hologramClones[0].tag = "HologramClone";
 
-        hologramClones[1] = Instantiate(hologramObject, new Vector3(4, 0, 0), Quaternion.Euler(0, 90, 0));
+        hologramClones[1] = Instantiate(hologramObject, new Vector3(6, 0, 0), Quaternion.Euler(0, 90, 0));
         hologramClones[1].tag = "HologramClone";
 
-        hologramClones[2] = Instantiate(hologramObject, new Vector3(0, 0, -4), Quaternion.Euler(0, 180, 0));
+        hologramClones[2] = Instantiate(hologramObject, new Vector3(0, 0, -6), Quaternion.Euler(0, 180, 0));
         hologramClones[2].tag = "HologramClone";
 
-        hologramClones[3] = Instantiate(hologramObject, new Vector3(-4, 0, 0), Quaternion.Euler(0, -90, 0));
+        hologramClones[3] = Instantiate(hologramObject, new Vector3(-6, 0, 0), Quaternion.Euler(0, -90, 0));
         hologramClones[3].tag = "HologramClone";
     }
 

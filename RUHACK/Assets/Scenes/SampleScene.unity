@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfb6a2a1a7a9245b08416a7e89c7d859, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hologramObject: {fileID: 1481581361109270, guid: c52ba0fdb3b7f4135b1819a800806833, type: 3}
+  hologramObject: {fileID: 6837953556230798152, guid: a29fd62d86781465a8ebaaac13f2d8e0, type: 3}
   rotationSpeed: 50
   zoomSpeed: 2
 --- !u!114 &1055332102

@@ -24,31 +24,31 @@ public class GestureReceiver : MonoBehaviour
         // Apply gestures to each brain object
         foreach (GameObject brain in brainObjects)
         {
-            if (gesture == "rotate_left")
+            if (gesture == "drag_left")
             {
-                brain.transform.Rotate(Vector3.down * Time.deltaTime * 5000f);
+                brain.transform.Rotate(Vector3.down * Time.deltaTime * 25000f);
             }
-            else if (gesture == "rotate_right")
+            else if (gesture == "drag_right")
             {
-                brain.transform.Rotate(Vector3.up * Time.deltaTime * 5000f);
+                brain.transform.Rotate(Vector3.up * Time.deltaTime * 25000f);
             }
-            else if (gesture == "rotate_up")
+            else if (gesture == "drag_up")
             {
-                brain.transform.Rotate(Vector3.left * Time.deltaTime * 5000f);
+                brain.transform.Rotate(Vector3.left * Time.deltaTime * 25000f);
             }
-            else if (gesture == "rotate_down")
+            else if (gesture == "drag_down")
             {
-                brain.transform.Rotate(Vector3.right * Time.deltaTime * 5000f);
+                brain.transform.Rotate(Vector3.right * Time.deltaTime * 25000f);
             }
             else if (gesture == "zoom_in")
             {
                 Debug.Log("Zooming In");
-                brain.transform.localScale += Vector3.one * Time.deltaTime * 2f;
+                brain.transform.localScale += Vector3.one * Time.deltaTime * 1000f;
             }
             else if (gesture == "zoom_out")
             {
                 Debug.Log("Zooming Out");
-                brain.transform.localScale -= Vector3.one * Time.deltaTime * 2f;
+                brain.transform.localScale -= Vector3.one * Time.deltaTime * 1000f;
             }
 
         }

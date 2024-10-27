@@ -9,6 +9,14 @@ mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 hands = mp_hands.Hands(min_detection_confidence=0.7, min_tracking_confidence=0.5)
 
+# Set up socket server
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind(('localhost', 65432))  # Host and port for the connection
+server_socket.listen(1)
+print("Waiting for Unity to connect...")
+client_socket, _ = server_socket.accept()
+print("Unity connected!")
+
 # Variables to track gestures
 gesture = None
 prev_hand_state = None  # To store the previous hand state (palm or fist)
@@ -21,6 +29,7 @@ prev_zoom_dist = None  # Store previous distance between two index fingers for z
 pinch_threshold = 0.03  # Adjust pinch detection sensitivity for drag
 drag_threshold = 0.05  # Minimum movement required to register a drag (left/right/up/down)
 zoom_threshold = 0.02  # Minimum change in distance for zoom in/out
+<<<<<<< HEAD
 
 # Set up socket server
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -29,6 +38,8 @@ server_socket.listen(1)
 print("Waiting for Unity to connect...")
 client_socket, _ = server_socket.accept()
 print("Unity connected!")
+=======
+>>>>>>> eac4cafec81f893680267e280f9a033cb771968a
 
 # Palm detection
 def is_palm(landmarks):
@@ -177,6 +188,7 @@ while cap.isOpened():
             landmarks_list = [hand_landmarks.landmark for hand_landmarks in results.multi_hand_landmarks]
             detected_gesture = detect_zoom_gesture(landmarks_list)
 
+<<<<<<< HEAD
        
             if detected_gesture:
                 cv2.putText(frame, detected_gesture, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
@@ -185,6 +197,17 @@ while cap.isOpened():
                 client_socket.sendall(detected_gesture.encode())
                 print(f"Sent gesture: {detected_gesture}")
            
+=======
+        if detected_gesture:
+            # Display the detected gesture on the frame
+            cv2.putText(frame, detected_gesture, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            print(detected_gesture)  # Print gesture to console
+            
+            # Send the detected gesture via socket to Unity
+            client_socket.sendall(detected_gesture.encode())
+            print(f"Sent gesture: {detected_gesture}")
+
+>>>>>>> eac4cafec81f893680267e280f9a033cb771968a
     cv2.imshow("Hand Gesture Control", frame)
     
     if cv2.waitKey(5) & 0xFF == 27:  # Press 'Esc' to exit

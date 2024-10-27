@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+import time
 import socket
 
 # Initialize MediaPipe hands and drawing utilities
@@ -13,10 +14,12 @@ gesture = None
 prev_hand_state = None  # To store the previous hand state (palm or fist)
 prev_dist = None  # Used for zoom detection
 prev_pinch_pos = None  # To store the previous position of the pinch for drag
+drag_in_progress = False  # State to track if a drag is in progress
 
 # Sensitivity thresholds
-zoom_threshold = 0.15  # Adjust sensitivity for zoom (palm-to-fist zoom)
 pinch_threshold = 0.03  # Adjust pinch detection sensitivity for drag
+drag_threshold = 0.05  # Minimum movement required to register a drag (left/right/up/down)
+
 
 # Set up socket server
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -65,7 +68,7 @@ def is_fist(landmarks):
 
 # Gesture detection
 def detect_gesture(landmarks):
-    global gesture, prev_hand_state, prev_pinch_pos, prev_dist
+    global gesture, prev_pinch_pos, prev_dist, drag_in_progress
     
     # Extract x and y coordinates of specific landmarks for pinch detection
     index_finger_tip = landmarks[8]
@@ -77,47 +80,38 @@ def detect_gesture(landmarks):
     pinch_y = (index_finger_tip.y + thumb_tip.y) / 2
     current_pinch_pos = (pinch_x, pinch_y)
     
-    # Check for palm or fist states
-    if is_palm(landmarks):
-        current_hand_state = "palm"
-    elif is_fist(landmarks):
-        current_hand_state = "fist"
-    else:
-        current_hand_state = None  # Neither palm nor fist
-        
-    # Zoom gesture detection (palm to fist or fist to palm)
-    if prev_hand_state == "palm" and current_hand_state == "fist":
-        gesture = "zoom_in"  # Palm to fist -> Zoom in
-    elif prev_hand_state == "fist" and current_hand_state == "palm":
-        gesture = "zoom_out"  # Fist to palm -> Zoom out
-    else:
-        gesture = None  # No zoom gesture detected
-    
-    # Pinch detection for drag (if pinch detected, ignore palm/fist gestures)
+    # Pinch detection for drag (left/right/up/down)
     if current_dist < pinch_threshold:
         if prev_pinch_pos is not None:
-            dx = current_pinch_pos[0] - prev_pinch_pos[0]
-            dy = current_pinch_pos[1] - prev_pinch_pos[1]
-            
-            # Check for drag directions based on x and y movements
-            if abs(dx) > abs(dy):  # Horizontal movement
-                if dx > 0.05:  # Threshold to prevent minor movement detection
-                    gesture = "drag_right"
-                elif dx < -0.05:
-                    gesture = "drag_left"
-            else:  # Vertical movement
-                if dy > 0.05:
-                    gesture = "drag_down"
-                elif dy < -0.05:
-                    gesture = "drag_up"
+            dx = current_pinch_pos[0] - prev_pinch_pos[0]  # Horizontal movement
+            dy = current_pinch_pos[1] - prev_pinch_pos[1]  # Vertical movement
+
+            # Only detect drag gestures if a drag is not already in progress
+            if not drag_in_progress:
+                # Horizontal drag detection
+                if abs(dx) > abs(dy):  # Detect if horizontal movement is larger than vertical
+                    if dx > drag_threshold:
+                        gesture = "drag_right"
+                        drag_in_progress = True  # Set drag in progress
+                    elif dx < -drag_threshold:
+                        gesture = "drag_left"
+                        drag_in_progress = True  # Set drag in progress
+                # Vertical drag detection
+                else:  # Detect vertical movement
+                    if dy > drag_threshold:
+                        gesture = "drag_down"
+                        drag_in_progress = True  # Set drag in progress
+                    elif dy < -drag_threshold:
+                        gesture = "drag_up"
+                        drag_in_progress = True  # Set drag in progress
         
         prev_pinch_pos = current_pinch_pos  # Update pinch position
         prev_dist = current_dist  # Update pinch distance for next frame
     else:
+        # Reset the gesture and stop dragging when the pinch is released
+        gesture = None  # Stop returning any gesture when the pinch is released
         prev_pinch_pos = None  # Reset pinch when not pinched
-
-    # Update previous hand state for the next frame
-    prev_hand_state = current_hand_state
+        drag_in_progress = False  # Reset drag state when pinch is no longer detected
 
     return gesture
 
@@ -143,7 +137,7 @@ while cap.isOpened():
             if detected_gesture:
                 cv2.putText(frame, detected_gesture, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 print(detected_gesture)  # To view the output in console
-                      # Send gesture to Unity via socket
+                    # Send gesture to Unity via socket
                 client_socket.sendall(detected_gesture.encode())
                 print(f"Sent gesture: {detected_gesture}")
             

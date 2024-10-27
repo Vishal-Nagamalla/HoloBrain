@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import time
+import socket
 
 # Initialize MediaPipe hands and drawing utilities
 mp_hands = mp.solutions.hands
@@ -18,6 +19,15 @@ drag_in_progress = False  # State to track if a drag is in progress
 # Sensitivity thresholds
 pinch_threshold = 0.03  # Adjust pinch detection sensitivity for drag
 drag_threshold = 0.05  # Minimum movement required to register a drag (left/right/up/down)
+
+
+# Set up socket server
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind(('localhost', 65432))  # Localhost and port number for Unity connection
+server_socket.listen(1)
+print("Waiting for Unity to connect...")
+client_socket, _ = server_socket.accept()
+print("Unity connected!")
 
 # Palm detection
 def is_palm(landmarks):
@@ -127,6 +137,9 @@ while cap.isOpened():
             if detected_gesture:
                 cv2.putText(frame, detected_gesture, (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 print(detected_gesture)  # To view the output in console
+                    # Send gesture to Unity via socket
+                client_socket.sendall(detected_gesture.encode())
+                print(f"Sent gesture: {detected_gesture}")
             
     cv2.imshow("Hand Gesture Control", frame)
     
@@ -136,3 +149,5 @@ while cap.isOpened():
 cap.release()
 cv2.destroyAllWindows()
 hands.close()
+client_socket.close()
+server_socket.close()

@@ -10,6 +10,8 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 /brain_classification_env
+/MLBrainSorter/sorted_mri
+/MLBrainSorter/new_mri_scans
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data

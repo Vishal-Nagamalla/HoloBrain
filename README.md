@@ -24,7 +24,7 @@ HoloBrain does two things. First, there is a CNN model that can distinguish heal
 
 ## Collaborator
 
-<a href="[https://github.com/YousefIbrahimismail/Project-README-Template/graphs/contributor](https://github.com/sidp24)"></a>
+* [Siddharth Paul](https://github.com/sidp24)
 
 ## Built with
 

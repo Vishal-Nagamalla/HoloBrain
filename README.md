@@ -1,5 +1,7 @@
 # HOLOBRAIN
 
+### Major League Hacking First Place at Rutgers University Hackathon
+
 * Interactive 3D MRI Analysis with a Gesture-Controlled Hologram
 * Bringing Medical Imaging to Life: Diagnose, Detect, and Visualize
 
@@ -20,10 +22,9 @@ HoloBrain does two things. First, there is a CNN model that can distinguish heal
 
 HoloBrain does two things. First, there is a CNN model that can distinguish healthy brains from diseased or problematic ones. From there, you can take the diseased brain, upload it as an asset, and view it through the Dynamic HUD. In doing so, doctors can better visualize, locate, and hopefully treat any brain abnormality before it gets too late much more effectively. This HUD also uses gesture control, meaning that by using your hands in front of a camera, doctors and students can move and zoom around the brain, better showing each part, entirely controlled by the user for what they want.
 
-## Authors
+## Collaborator
 
-* Vishal Nagamalla
-* Siddharth Paul
+<a href="[https://github.com/YousefIbrahimismail/Project-README-Template/graphs/contributor](https://github.com/sidp24)"></a>
 
 ## Built with
 

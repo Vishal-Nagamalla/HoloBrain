@@ -1,1 +1,0 @@
-detect_zoom_gesture
